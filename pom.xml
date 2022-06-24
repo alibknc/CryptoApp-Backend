@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.project</groupId>
     <artifactId>cryptoApp</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>cryptoApp</name>
     <description>cryptoApp</description>
     <packaging>jar</packaging>
@@ -32,6 +32,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
