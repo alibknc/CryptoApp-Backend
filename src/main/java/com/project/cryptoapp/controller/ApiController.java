@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class ApiController {
-    private final BinanceApiService apiService = new BinanceApiService();
+    private final BinanceApiService apiService;
 
+    public ApiController(BinanceApiService apiService) {
+        this.apiService = apiService;
+    }
     @GetMapping("/")
     public String getHello(){
         return "Hello World!";
