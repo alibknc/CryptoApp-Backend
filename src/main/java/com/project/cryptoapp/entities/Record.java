@@ -1,7 +1,6 @@
 package com.project.cryptoapp.entities;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name="record")
@@ -21,9 +20,9 @@ public class Record {
     private double price;
 
     @Column(name="time")
-    private Date time;
+    private String time;
 
-    public Record(int id, String ip, String symbol, double price, Date time) {
+    public Record(int id, String ip, String symbol, double price, String time) {
         this.id = id;
         this.ip = ip;
         this.symbol = symbol;
@@ -65,11 +64,11 @@ public class Record {
         this.price = price;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }
