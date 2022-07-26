@@ -4,7 +4,9 @@ import com.binance.api.client.BinanceApiCallback;
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiWebSocketClient;
 import com.binance.api.client.domain.event.AggTradeEvent;
+import com.project.cryptoapp.entities.AggTradeObject;
 import com.project.cryptoapp.entities.Record;
+import com.project.cryptoapp.repositories.AggTradeObjectRepository;
 import com.project.cryptoapp.repositories.RecordRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,11 @@ public class BinanceWebSocketService {
 
     private HashMap<String, Object> results;
     private final RecordRepository recordRepository;
+    private final AggTradeObjectRepository aggTradeObjectRepository;
 
-    public BinanceWebSocketService(RecordRepository recordRepository) {
+    public BinanceWebSocketService(RecordRepository recordRepository, AggTradeObjectRepository aggTradeObjectRepository) {
         this.recordRepository = recordRepository;
+        this.aggTradeObjectRepository = aggTradeObjectRepository;
     }
 
     @PostConstruct
@@ -56,6 +60,9 @@ public class BinanceWebSocketService {
 
     public void saveLastResponse(AggTradeEvent response) {
         results.replace(response.getSymbol(), response.getPrice());
+
+        AggTradeObject tradeObject = new AggTradeObject(response);
+        aggTradeObjectRepository.save(tradeObject);
     }
 
     public HashMap<String, Object> getTickerBySymbol(String symbol, HttpServletRequest request) {
