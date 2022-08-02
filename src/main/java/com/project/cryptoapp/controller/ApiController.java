@@ -16,6 +16,7 @@ public class ApiController {
     public ApiController(BinanceApiService apiService, BinanceWebSocketService webSocketService) {
         this.apiService = apiService;
         this.webSocketService = webSocketService;
+        log.info("Application is started");
     }
 
     @GetMapping("/")
@@ -26,7 +27,7 @@ public class ApiController {
 
     @GetMapping("/ticker")
     public HashMap<String, Object> getTickerBySymbol(@RequestParam String symbol, HttpServletRequest request){
-        log.debug("getTickerBySymbol is called");
+        log.debug("getTickerBySymbol is called for {}", symbol);
         //return apiService.getTickerBySymbol(symbol, request);
         return webSocketService.getTickerBySymbol(symbol, request);
     }

@@ -8,6 +8,7 @@ import com.project.cryptoapp.entities.AggTradeObject;
 import com.project.cryptoapp.entities.Record;
 import com.project.cryptoapp.repositories.AggTradeObjectRepository;
 import com.project.cryptoapp.repositories.RecordRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+@Slf4j
 @Service
 public class BinanceWebSocketService {
     @Value("#{'${symbols}'}")
@@ -63,6 +65,8 @@ public class BinanceWebSocketService {
 
         AggTradeObject tradeObject = new AggTradeObject(response);
         aggTradeObjectRepository.save(tradeObject);
+
+        log.trace("Last price from websocket for {}: {}", response.getSymbol(), response.getPrice());
     }
 
     public HashMap<String, Object> getTickerBySymbol(String symbol, HttpServletRequest request) {
@@ -78,6 +82,8 @@ public class BinanceWebSocketService {
         record.setPrice(Double.parseDouble((String) result.get("lastPrice")));
         record.setTime(formatter.format(date));
         recordRepository.save(record);
+
+        log.trace("The received data is saved in the database as {}", symbol);
 
         return result;
     }
