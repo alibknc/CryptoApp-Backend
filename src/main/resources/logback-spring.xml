@@ -13,7 +13,7 @@
     </appender>
 
     <appender name="FILEOUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/spring-boot-logging.log</file>
+        <file>${LOG_PATH}/crypto.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
         </encoder>
@@ -21,12 +21,23 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/archive/spring-boot-logging-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
+                <maxFileSize>30MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 
     <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="FILEOUT"/>
+        </root>
+        <logger name="com.project.cryptoapp" additivity="false" level="debug">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="FILEOUT"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="local">
         <root level="info">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="FILEOUT"/>
