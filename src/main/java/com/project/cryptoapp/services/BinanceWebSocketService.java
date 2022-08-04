@@ -10,6 +10,7 @@ import com.project.cryptoapp.repositories.AggTradeObjectRepository;
 import com.project.cryptoapp.repositories.RecordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ import java.util.HashMap;
 @Slf4j
 @Service
 public class BinanceWebSocketService {
+    private SimpMessagingTemplate template;
+
     @Value("#{'${symbols}'}")
     private String symbolList;
 
@@ -27,9 +30,10 @@ public class BinanceWebSocketService {
     private final RecordRepository recordRepository;
     private final AggTradeObjectRepository aggTradeObjectRepository;
 
-    public BinanceWebSocketService(RecordRepository recordRepository, AggTradeObjectRepository aggTradeObjectRepository) {
+    public BinanceWebSocketService(RecordRepository recordRepository, AggTradeObjectRepository aggTradeObjectRepository, SimpMessagingTemplate template) {
         this.recordRepository = recordRepository;
         this.aggTradeObjectRepository = aggTradeObjectRepository;
+        this.template = template;
     }
 
     @PostConstruct
@@ -62,6 +66,8 @@ public class BinanceWebSocketService {
 
     public void saveLastResponse(AggTradeEvent response) {
         results.replace(response.getSymbol(), response.getPrice());
+
+        template.convertAndSend("/topic/lastprice", response);
 
         AggTradeObject tradeObject = new AggTradeObject(response);
         aggTradeObjectRepository.save(tradeObject);
